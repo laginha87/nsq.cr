@@ -1,1 +1,10 @@
 language: crystal
+services:
+  - docker
+
+
+before_script:
+  - docker-compose up -d
+
+script:
+  - crystal spec
