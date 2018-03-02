@@ -5,9 +5,6 @@ def send_message(topic, channel, message)
   JSON.parse `curl -d '#{message}' '#{NSQD_1_HTTP_ADDRESS}/pub?topic=#{topic}&channel=#{channel}' 2> /dev/null`
 end
 
-TOPIC = "topic_1"
-CHANNEL = "channel_1"
-
 module NSQ
   describe Connection do
     it "initializes" do

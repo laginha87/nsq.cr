@@ -24,7 +24,7 @@ module NSQ
         Int32.from_io(@socket, IO::ByteFormat::BigEndian)
         slice = Bytes.new(size)
         @socket.read(slice)
-        String.new(slice)
+        String.new(slice).rstrip('\u0000')
     end
 
     def send(method, data)
