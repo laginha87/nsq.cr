@@ -1,9 +1,6 @@
 require "../spec_helper"
 require "json"
 
-def send_message(topic, channel, message)
-  JSON.parse `curl -d '#{message}' '#{NSQD_1_HTTP_ADDRESS}/pub?topic=#{topic}&channel=#{channel}' 2> /dev/null`
-end
 
 module NSQ
   describe Connection do
@@ -16,6 +13,15 @@ module NSQ
     it "can initialize the connection to nsqd" do
         connection = Connection.new(NSQD_1_TCP_ADDRESS)
         connection.identify().should eq("OK")
+    end
+
+    it "subscribes to a channel" do
+      client = Connection.new(NSQD_1_TCP_ADDRESS)
+      message_channel = Channel(Message).new
+      client.sub(TOPIC, CHANNEL, message_channel)
+      send_message(TOPIC, CHANNEL, "YEY")
+
+      message_channel.receive.body.should eq("YEY")
     end
   end
 end
