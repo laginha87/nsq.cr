@@ -1,6 +1,6 @@
 # nsq.cr
 
-TODO: Write a description here
+NSQ client lib for crystal.
 
 ## Installation
 
