@@ -10,16 +10,7 @@ module NSQ
         def subscribe(topic, channel, block)
             message_channel = Channel(Message).new
             @conn.sub(topic, channel, message_channel)
-            spawn do
-                loop do
-                    select
-                    when msg = message_channel.receive
-                        block.call(msg)
-                    else
-                        sleep 1
-                    end
-                end
-            end
+            listen_to_channel(message_channel, block)
         end
     end
 end

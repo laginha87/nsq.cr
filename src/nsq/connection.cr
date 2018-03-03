@@ -16,11 +16,7 @@ module NSQ
       send_method Protocol.sub(topic, channel)
       read
       send_method("RDY 1\n")
-      spawn do
-        loop do
-          message_channel.send(read.as(Message))
-        end
-      end
+      spawn_loop { message_channel.send(read.as(Message)) }
     end
 
     def identify
@@ -49,7 +45,11 @@ module NSQ
         attempts  = UInt16.from_io(@socket, IO::ByteFormat::BigEndian)
         @socket.read(message_id_slice)
         @socket.read(body_slice)
-        Message.new(String.new(body_slice).rstrip('\u0000'))
+        Message.new(
+          id: String.new(message_id_slice),
+          timestamp: timestamp,
+          attempts: attempts,
+          body: String.new(body_slice).rstrip('\u0000'))
       end
     end
 
