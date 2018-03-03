@@ -20,10 +20,14 @@ module NSQ
     end
 
     def identify
-      data = {"client_id": "worker_1", "hostname": "hostname", "feature_negotiation": false}.to_json
+      data = {"client_id": "worker_1", "hostname": "hostname", "feature_negotiation": false, "max_in_flight": "2"}.to_json
       @socket << Protocol::MAGIC_V2
       send(Protocol.identify, data)
       read
+    end
+
+    def fin(id)
+      @socket << "FIN #{id}\n"
     end
 
     def read
@@ -39,17 +43,18 @@ module NSQ
         @socket.read(slice)
         String.new(slice).rstrip('\u0000')
       else Protocol::FRAME_TYPE_MESSAGE
-        body_slice = Bytes.new(frame_size - 26)
-        message_id_slice = Bytes.new(16)
-        timestamp = Int64.from_io(@socket, IO::ByteFormat::BigEndian)
-        attempts  = UInt16.from_io(@socket, IO::ByteFormat::BigEndian)
-        @socket.read(message_id_slice)
-        @socket.read(body_slice)
-        Message.new(
-          id: String.new(message_id_slice),
-          timestamp: timestamp,
-          attempts: attempts,
-          body: String.new(body_slice).rstrip('\u0000'))
+      body_slice = Bytes.new(frame_size - 26)
+      message_id_slice = Bytes.new(16)
+      timestamp = Int64.from_io(@socket, IO::ByteFormat::BigEndian)
+      attempts = UInt16.from_io(@socket, IO::ByteFormat::BigEndian)
+      @socket.read(message_id_slice)
+      @socket.read(body_slice)
+      Message.new(
+        id: String.new(message_id_slice),
+        timestamp: timestamp,
+        attempts: attempts,
+        body: String.new(body_slice).rstrip('\u0000'),
+        connection: self)
       end
     end
 
