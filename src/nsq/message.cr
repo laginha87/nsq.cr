@@ -17,5 +17,12 @@ module NSQ
       connection.fin(@id)
     end
 
+    def touch
+      connection.touch(@id)
+    end
+
+    def requeue
+      connection.req(@id)
+    end
   end
 end

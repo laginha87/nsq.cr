@@ -5,6 +5,10 @@ module NSQ
     property socket : TCPSocket
     property options : Protocol::ClientOptions
 
+    def initialize(nsd_address : String)
+      initialize(nsd_address, Protocol::DEFAULT_OPTIONS)
+    end
+
     def initialize(nsd_address : String, @options)
       @host, @port = nsd_address.split(":")
       @socket = TCPSocket.new(host, port)
@@ -26,6 +30,14 @@ module NSQ
 
     def fin(id)
       @socket << "FIN #{id}\n"
+    end
+
+    def touch(id)
+      @socket << "TOUCH #{id}\n"
+    end
+
+    def req(id)
+      @socket << "REQ #{id} 0\n"
     end
 
     def read
