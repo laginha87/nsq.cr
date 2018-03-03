@@ -1,6 +1,4 @@
 require "../spec_helper"
-require "json"
-
 module NSQ
   describe Client do
     it "initializes" do
@@ -28,7 +26,7 @@ module NSQ
 
       callback = ->(message : Message) do
         assertion_channel.send(message.body)
-        message.fin
+        message.finish
       end
       client.subscribe(NSQHelper.topic, NSQHelper.channel, callback)
 

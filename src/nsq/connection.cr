@@ -1,12 +1,11 @@
-require "socket"
-
 module NSQ
   class Connection
     property host : String
     property port : String
     property socket : TCPSocket
+    property options : Protocol::ClientOptions
 
-    def initialize(nsd_address : String)
+    def initialize(nsd_address : String, @options)
       @host, @port = nsd_address.split(":")
       @socket = TCPSocket.new(host, port)
     end
@@ -20,9 +19,8 @@ module NSQ
     end
 
     def identify
-      data = {"client_id": "worker_1", "hostname": "hostname", "feature_negotiation": false, "max_in_flight": "2"}.to_json
       @socket << Protocol::MAGIC_V2
-      send(Protocol.identify, data)
+      send(Protocol.identify, @options.to_json)
       read
     end
 

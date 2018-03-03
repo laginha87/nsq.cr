@@ -1,3 +1,5 @@
+require "socket"
+require "json"
 require "./nsq/*"
 
 # TODO: Write documentation for `NSQ`

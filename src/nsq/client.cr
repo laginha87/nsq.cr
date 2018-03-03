@@ -7,8 +7,12 @@ module NSQ
       initialize [lookup_address]
     end
 
-    def initialize(@lookup_addresses : Array(String))
-      @connections = @lookup_addresses.map { |c| Connection.new(c) }
+    def initialize(lookup_addresses : Array(String))
+      initialize lookup_addresses, Protocol::DEFAULT_OPTIONS
+    end
+
+    def initialize(@lookup_addresses : Array(String), options : Protocol::ClientOptions)
+      @connections = @lookup_addresses.map { |c| Connection.new(c, options) }
     end
 
     def subscribe(topic, channel, block)

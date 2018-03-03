@@ -1,5 +1,3 @@
-require "socket"
-
 module NSQ
   class Message
     property body : String
@@ -15,8 +13,9 @@ module NSQ
       @connection.not_nil!
     end
 
-    def fin
+    def finish
       connection.fin(@id)
     end
+
   end
 end
