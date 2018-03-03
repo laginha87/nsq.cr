@@ -4,12 +4,11 @@ module NSQ
     property connections : Array(Connection)
 
     def initialize(lookup_address : String)
-      @lookup_addresses = [lookup_address]
-      @connections = lookup_addresses.map { |c| Connection.new(c) }
+      initialize [lookup_address]
     end
 
     def initialize(@lookup_addresses : Array(String))
-      @connections = lookup_addresses.map { |c| Connection.new(c) }
+      @connections = @lookup_addresses.map { |c| Connection.new(c) }
     end
 
     def subscribe(topic, channel, block)
