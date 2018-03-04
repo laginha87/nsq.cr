@@ -2,6 +2,8 @@
 
 NSQ client lib for crystal.
 
+[![Build Status](https://travis-ci.org/laginha87/nsq.cr.svg?branch=master)](https://travis-ci.org/laginha87/nsq.cr)
+
 ## Installation
 
 Add this to your application's `shard.yml`:
