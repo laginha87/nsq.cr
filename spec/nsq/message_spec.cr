@@ -18,9 +18,9 @@ module NSQ
         server = TCPServer.new("localhost", 3000)
         server.accept do |client|
           message = client.gets
-          message.should eq ("TOUCH 1234")
           channel.send(nil)
           server.close
+          message.should eq ("TOUCH 1234")
         end
       end
       conn = Connection.new "localhost:3000"
@@ -35,9 +35,9 @@ module NSQ
         server = TCPServer.new("localhost", 3000)
         server.accept do |client|
           message = client.gets
-          message.should eq ("REQ 1234 0")
           channel.send(nil)
           server.close
+          message.should eq ("REQ 1234 0")
         end
       end
       conn = Connection.new "localhost:3000"
