@@ -1,4 +1,5 @@
 language: crystal
+sudo: true
 services:
   - docker
 
