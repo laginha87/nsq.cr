@@ -15,7 +15,7 @@ module NSQ
     it "touches" do
       channel = Channel(Nil).new
       spawn do
-        server = TCPServer.new("localhost", 99999)
+        server = TCPServer.new("localhost", 3000)
         server.accept do |client|
           message = client.gets
           message.should eq ("TOUCH 1234")
@@ -23,7 +23,7 @@ module NSQ
           server.close
         end
       end
-      conn = Connection.new "localhost:99999"
+      conn = Connection.new "localhost:3000"
       message = Message.new(attempts: 1.to_u16, id: "1234", timestamp: 10000.to_i64, body: "body", connection: conn)
       message.touch
       channel.receive
@@ -32,7 +32,7 @@ module NSQ
     it "requeues" do
       channel = Channel(Nil).new
       spawn do
-        server = TCPServer.new("localhost", 99999)
+        server = TCPServer.new("localhost", 3000)
         server.accept do |client|
           message = client.gets
           message.should eq ("REQ 1234 0")
@@ -40,7 +40,7 @@ module NSQ
           server.close
         end
       end
-      conn = Connection.new "localhost:99999"
+      conn = Connection.new "localhost:3000"
       message = Message.new(attempts: 1.to_u16, id: "1234", timestamp: 10000.to_i64, body: "body", connection: conn)
       message.requeue
       channel.receive
