@@ -21,8 +21,10 @@ module NSQ::Protocol
       heartbeat_interval: {type: Int32, nilable: true},
       feature_negotiation: Bool
     )
-    def initialize(@client_id, @hostname, @heartbeat_interval=nil, @feature_negotiation=false)
+
+    def initialize(@client_id, @hostname, @heartbeat_interval = nil, @feature_negotiation = false)
     end
   end
+
   DEFAULT_OPTIONS = ClientOptions.new(client_id: "nsq.cr", hostname: "localhost")
 end

@@ -1,7 +1,6 @@
 require "../spec_helper"
 require "json"
 
-
 macro tcp_server_eq(message, &block)
   channel = Channel(Nil).new
   server = TCPServer.new("localhost", 51234)
@@ -43,7 +42,5 @@ module NSQ
         message.requeue
       end
     end
-
-
   end
 end

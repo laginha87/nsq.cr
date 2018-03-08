@@ -1,4 +1,5 @@
 require "../spec_helper"
+
 module NSQ
   describe Client do
     it "initializes" do

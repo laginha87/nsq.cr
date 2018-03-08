@@ -5,7 +5,6 @@ private def generate_connection
   NSQ::Connection.new(NSQD_1_TCP_ADDRESS, NSQ::Protocol::DEFAULT_OPTIONS)
 end
 
-
 module NSQ
   describe Connection do
     it "initializes" do
