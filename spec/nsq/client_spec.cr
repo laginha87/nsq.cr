@@ -32,11 +32,11 @@ module NSQ
 
       send_message(NSQHelper.topic, NSQHelper.channel, "YEY")
       send_message(NSQHelper.topic, NSQHelper.channel, "YEY2")
-      message =  assertion_channel.receive
+      message = assertion_channel.receive
       message.touch
       message.finish
       message.touch
-      message_2 =  assertion_channel.receive
+      message_2 = assertion_channel.receive
       message.touch
       message_2.finish
     end
