@@ -19,7 +19,14 @@ module NSQ
       send_method Protocol.sub(topic, channel)
       read
       send_method("RDY 1\n")
-      spawn_loop { message_channel.send(read.as(Message)) }
+      spawn_loop do
+        case msg = read
+        when Message
+          message_channel.send(msg)
+        else
+          Log.logger.info(msg)
+        end
+      end
     end
 
     def identify
@@ -29,41 +36,30 @@ module NSQ
     end
 
     def fin(id)
-      @socket << "FIN #{id}\n"
+      @socket.puts "FIN #{id}"
     end
 
     def touch(id)
-      @socket << "TOUCH #{id}\n"
+      @socket.puts "TOUCH #{id}"
     end
 
     def req(id)
-      @socket << "REQ #{id} 0\n"
+      @socket.puts "REQ #{id} 0"
     end
 
     def read
-      frame_size = Int32.from_io(@socket, IO::ByteFormat::BigEndian)
-      frame_type = Int32.from_io(@socket, IO::ByteFormat::BigEndian)
-      case frame_type
+      frame_size = read_int
+      case read_int
       when Protocol::FRAME_TYPE_RESPONSE
-        slice = Bytes.new(frame_size)
-        @socket.read(slice)
-        String.new(slice).rstrip('\u0000')
+        read_string(frame_size - 4)
       when Protocol::FRAME_TYPE_ERROR
-        slice = Bytes.new(frame_size)
-        @socket.read(slice)
-        String.new(slice).rstrip('\u0000')
+        read_string(frame_size - 4)
       else Protocol::FRAME_TYPE_MESSAGE
-      body_slice = Bytes.new(frame_size - 26)
-      message_id_slice = Bytes.new(16)
-      timestamp = Int64.from_io(@socket, IO::ByteFormat::BigEndian)
-      attempts = UInt16.from_io(@socket, IO::ByteFormat::BigEndian)
-      @socket.read(message_id_slice)
-      @socket.read(body_slice)
       Message.new(
-        id: String.new(message_id_slice),
-        timestamp: timestamp,
-        attempts: attempts,
-        body: String.new(body_slice).rstrip('\u0000'),
+        timestamp: read_int(Int64),
+        attempts: read_int(UInt16),
+        id: read_string(16),
+        body: read_string(frame_size - 26 - 4),
         connection: self)
       end
     end
@@ -80,6 +76,14 @@ module NSQ
     private def send_data(data)
       data.bytesize.to_i32.to_io(@socket, IO::ByteFormat::BigEndian)
       @socket << data
+    end
+
+    private def read_int(t = Int32)
+      t.from_io(@socket, IO::ByteFormat::BigEndian)
+    end
+
+    private def read_string(size = Int)
+      @socket.gets(size).not_nil!
     end
   end
 end

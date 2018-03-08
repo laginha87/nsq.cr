@@ -21,6 +21,26 @@ module NSQ
       assertion_channel.receive.should eq("YEY")
     end
 
+    it "can touch after finish doesn't break connection" do
+      client = Client.new(NSQD_1_TCP_ADDRESS)
+      assertion_channel = Channel(Message).new
+
+      callback = ->(message : Message) do
+        assertion_channel.send(message)
+      end
+      client.subscribe(NSQHelper.topic, NSQHelper.channel, callback)
+
+      send_message(NSQHelper.topic, NSQHelper.channel, "YEY")
+      send_message(NSQHelper.topic, NSQHelper.channel, "YEY2")
+      message =  assertion_channel.receive
+      message.touch
+      message.finish
+      message.touch
+      message_2 =  assertion_channel.receive
+      message.touch
+      message_2.finish
+    end
+
     it "subscribes to a channel on mulitple nsqd instances" do
       client = Client.new([NSQD_1_TCP_ADDRESS, NSQD_2_TCP_ADDRESS])
       assertion_channel = Channel(String).new
