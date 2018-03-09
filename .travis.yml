@@ -7,6 +7,10 @@ services:
 before_script:
   - docker-compose up -d
 
+instal:
+  shards install
+
 script:
   - crystal spec
   - crystal tool format --check
+  - bin/ameba
