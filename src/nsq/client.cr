@@ -20,5 +20,9 @@ module NSQ
       @connections.each &.sub(topic, channel, message_channel)
       listen_to_channel(message_channel, block)
     end
+
+    def subscribe(topic, channel, &block : Message ->)
+      subscribe(topic, channel, block)
+    end
   end
 end

@@ -5,12 +5,10 @@ puts "Getting started"
 
 client = NSQ::Client.new("localhost:9002")
 
-callback = ->(message : NSQ::Message) do
+client.subscribe("topic_1", "channel_1") do |message|
   puts message.body
   message.finish
 end
-
-client.subscribe("topic_1", "channel_1", callback)
 
 def send_message(topic, message)
   `curl -d '#{message}' 'localhost:9001/pub?topic=#{topic}' &> /dev/null`
