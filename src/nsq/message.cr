@@ -21,8 +21,8 @@ module NSQ
       connection.touch(@id)
     end
 
-    def requeue
-      connection.req(@id)
+    def requeue(defer=0)
+      connection.req(@id, defer)
     end
   end
 end

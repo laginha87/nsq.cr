@@ -5,6 +5,7 @@ module NSQ
     private def self.initialize_logger
       logger = Logger.new(STDOUT)
       logger.level = Logger::ERROR
+      logger.progname = "nsq.cr"
       logger
     end
 

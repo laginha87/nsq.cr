@@ -42,5 +42,21 @@ module NSQ
         message.requeue
       end
     end
+
+    it "requeues with defer" do
+      tcp_server_eq("REQ 1234 100") do |host|
+        conn = Connection.new host
+        message = Message.new(attempts: 1.to_u16, id: "1234", timestamp: 10_000.to_i64, body: "body", connection: conn)
+        message.requeue(100)
+      end
+    end
+
+    it "fins" do
+      tcp_server_eq("FIN 1234") do |host|
+        conn = Connection.new host
+        message = Message.new(attempts: 1.to_u16, id: "1234", timestamp: 10_000.to_i64, body: "body", connection: conn)
+        message.finish
+      end
+    end
   end
 end

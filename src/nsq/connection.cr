@@ -43,8 +43,8 @@ module NSQ
       @socket.puts "TOUCH #{id}"
     end
 
-    def req(id)
-      @socket.puts "REQ #{id} 0"
+    def req(id, defer=0)
+      @socket.puts "REQ #{id} #{defer}"
     end
 
     def read
