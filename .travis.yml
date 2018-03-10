@@ -12,4 +12,4 @@ instal:
 
 script:
   - crystal spec
-  - ./bin/ci_check
+  - bin/ci_check
