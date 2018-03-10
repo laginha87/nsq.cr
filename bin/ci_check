@@ -1,0 +1,2 @@
+crystal tool format --check
+./bin/ameba
