@@ -23,6 +23,8 @@ module NSQ
         case msg = read
         when Message
           message_channel.send(msg)
+        when "_heartbeat_"
+          self.nop
         else
           Log.logger.info(msg)
         end
@@ -45,6 +47,10 @@ module NSQ
 
     def req(id, defer = 0)
       @socket.puts "REQ #{id} #{defer}"
+    end
+
+    def nop
+      @socket.puts "NOP"
     end
 
     def read

@@ -12,5 +12,4 @@ instal:
 
 script:
   - crystal spec
-  - crystal tool format --check
-  - bin/ameba
+  - ./bin/ci_check

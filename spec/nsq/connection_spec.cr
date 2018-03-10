@@ -26,5 +26,15 @@ module NSQ
 
       message_channel.receive.body.should eq("YEY")
     end
+
+    it "responds to heartbeats" do
+      options = Protocol::ClientOptions.new(client_id: "nsq.cr", hostname: "localhost", heartbeat_interval: 1000)
+      connection = NSQ::Connection.new(NSQD_1_TCP_ADDRESS, options)
+      message_channel = Channel(Message).new
+      connection.sub(NSQHelper.topic, NSQHelper.channel, message_channel)
+      sleep 2
+      send_message(NSQHelper.topic, NSQHelper.channel, "YEY")
+      message_channel.receive.body.should eq("YEY")
+    end
   end
 end
