@@ -1,6 +1,6 @@
 /doc/
 /lib/
-/bin/ameba
+/bin/
 /.shards/
 
 # Libraries don't need dependency lock
