@@ -26,6 +26,18 @@ TODO: Write usage instructions here
 
 TODO: Write development instructions here
 
+## Roadmap
+- [ ] Add consumers
+- [ ] Add usage examples for consumers
+- [ ] Add producers
+- [ ] Add usage examples for producers
+- [ ] Add discovery
+- [ ] Add backoff
+- [ ] Add TLS
+- [ ] Add Snappy
+- [ ] Add Sampling
+- [ ] Add auth
+
 ## Contributing
 
 1. Fork it ( https://github.com/laginha87/nsq.cr/fork )
